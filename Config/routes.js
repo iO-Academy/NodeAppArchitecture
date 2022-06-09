@@ -1,6 +1,6 @@
 const ToDosController = require('../Controllers/ToDosController')
 const bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json()
 
 function routes(app) {
     //get all uncompleted todos
@@ -12,6 +12,7 @@ function routes(app) {
     //complete a todo
     app.put('/todos/:id', ToDosController.completeTodo)
 
+    // delete a todo
     app.delete('/todos/:id', ToDosController.deleteTodo)
 }
 

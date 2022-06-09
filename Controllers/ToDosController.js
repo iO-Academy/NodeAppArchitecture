@@ -2,52 +2,44 @@ const TodosService = require('../Services/ToDosService')
 const DbService = require('../Services/DbService')
 const ObjectId = require('mongodb').ObjectId
 
-function getTodos(req, res) {
-    DbService.connectToDB(function(db) {
-        TodosService.getAllTodos(db, function (documents) {
-            res.json(documents)
-        })
-    })
+async function getTodos(req, res) {
+    const db = await DbService.connectToDB()
+    const documents = await TodosService.getAllTodos(db)
+    res.json(documents)
 }
 
-function addTodo(req, res) {
+async function addTodo(req, res) {
     let newTodo = req.body.todo
-    DbService.connectToDB(function(db) {
-        TodosService.addTodo(db, newTodo, function (result) {
-            if(result.insertedCount === 1){
-                res.json({success: true, msg: 'inserted todo into db', data: []})
-            } else {
-                res.json({success: false, msg: 'nope, didnt work', data: []})
-            }
-        })
-    })
+    const db = await DbService.connectToDB()
+    const result = await TodosService.addTodo(db, newTodo)
+    if (result.insertedCount === 1){
+        res.json({success: true, msg: 'inserted todo into db', data: []})
+    } else {
+        res.json({success: false, msg: 'nope, didnt work', data: []})
+    }
+
 }
 
-function completeTodo(req, res) {
+async function completeTodo(req, res) {
     let id = ObjectId(req.params.id)
-    DbService.connectToDB(function(db) {
-        completeTodo(db, id, function (result) {
-            if(result.modifiedCount){
-                res.json({success: true, msg: 'edited db', data: []})
-            } else {
-                res.json({success: false, msg: 'nope, didnt work', data: []})
-            }
-        })
-
-    })
+    const db = await DbService.connectToDB()
+    const result = await TodosService.completeTodo(db, id)
+    if (result.modifiedCount){
+        res.json({success: true, msg: 'edited db', data: []})
+    } else {
+        res.json({success: false, msg: 'nope, didnt work', data: []})
+    }
 }
 
-function deleteTodo(req, res) {
+async function deleteTodo(req, res) {
     let id = ObjectId(req.params.id)
-    DbService.connectToDB(function(db) {
-        TodosService.deleteTodo(db, id, function (result) {
-            if(result.deletedCount){
-                res.json({success: true, msg: 'deleted doc from db', data: []})
-            } else {
-                res.json({success: false, msg: 'nope, didnt work', data: []})
-            }
-        })
-    })
+    const db = await DbService.connectToDB()
+    const result = await TodosService.deleteTodo(db, id)
+    if (result.deletedCount){
+        res.json({success: true, msg: 'deleted doc from db', data: []})
+    } else {
+        res.json({success: false, msg: 'nope, didnt work', data: []})
+    }
 }
 
 module.exports.getTodos = getTodos

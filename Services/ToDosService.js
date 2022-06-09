@@ -1,30 +1,17 @@
-var getAllTodos = function (db, callback) {
-    var collection = db.collection('todos')
-    collection.find().toArray(function (err, documents) {
-        callback(documents)
-    })
+const getAllTodos = async (db) => {
+    return db.collection('todos').find().toArray()
 }
 
-var addTodo = function(db, newTodo, callback) { // mongodb insert data query
-    var collection = db.collection('todos')
-    collection.insertOne({"todo" : newTodo}, function(err, result) {
-        callback(result)
-    })
+const addTodo = async (db, newTodo) => { // mongodb insert data query
+    return db.collection('todos').insertOne({"todo" : newTodo})
 }
 
-var completeTodo = function(db, id, callback) {
-    var collection = db.collection('todos');
-    collection.updateOne({ "_id" : id }
-        , { $set: { "completed" : true } }, function(err, result) {
-            callback(result)
-        });
+const completeTodo = async (db, id) => {
+    return db.collection('todos').updateOne({ "_id" : id }, { $set: { "completed" : true } })
 }
 
-var deleteTodo = function(db, id, callback) {
-    var collection = db.collection('todos');
-    collection.deleteOne({ "_id" : id }, function(err, result) {
-        callback(result)
-    });
+const deleteTodo = async (db, id) => {
+    return db.collection('todos').deleteOne({ "_id" : id })
 }
 
 module.exports.getAllTodos = getAllTodos
